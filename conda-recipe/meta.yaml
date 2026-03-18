@@ -6,9 +6,8 @@ package:
   version: {{ version }}
 
 build:
-  noarch: generic
-  number: 2
-  skip: True  # [not linux]
+  number: 3
+  skip: true  # [not linux]
 
 requirements:
   run:
@@ -18,6 +17,7 @@ test:
   commands:
     - export ICD_FN=${CONDA_PREFIX}/etc/OpenCL/vendors/intel-ocl-gpu.icd
     - test -h ${ICD_FN}
+    - test -e "$(readlink ${ICD_FN})"
 
 about:
   home: https://github.com/IntelPython/{{ name|lower }}-feedstock
@@ -45,3 +45,4 @@ about:
 extra:
   recipe-maintainers:
     - ndgrigorian
+    - jharlow-intel

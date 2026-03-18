@@ -18,20 +18,23 @@ systemwide_vendors=/etc/OpenCL/vendors
 env_vendors=${PREFIX}/etc/OpenCL/vendors
 env_icd_fn=$env_vendors/intel-ocl-gpu.icd
 
-if [[ -d $systemwide_vendors ]]
+mkdir -p "$env_vendors"
+
+if [[ -d "$systemwide_vendors" ]]
 then
-    systemwide_icd_fn=$(grep -rl "libigdrcl" ${systemwide_vendors})
-    if [[ -f $systemwide_icd_fn ]]
+    systemwide_icd_fn=$(grep -rl "libigdrcl" "${systemwide_vendors}" | head -n1)
+    if [[ -f "$systemwide_icd_fn" ]]
     then
-        ln -s $systemwide_icd_fn $env_icd_fn
-        echo "Symbolic link was successfully created. OpenCL GPU device should be discoverable by OpenCL loader.\n" >> ${PREFIX}/.messages.txt
+        ln -s "$systemwide_icd_fn" "$env_icd_fn" || true
+        echo "Symbolic link was successfully created. OpenCL GPU device should be discoverable by OpenCL loader.\n" >> "${PREFIX}/.messages.txt"
     else
-        echo "No ICD file for Intel(R) GPU device was found in '${systemwise_vendors}'.\n" >> ${PREFIX}/.messages.txt
-        echo "Creating default symbolic link.\n" >> ${PREFIX}/.messages.txt
-        ln -s ${systemwide_vendors}/intel.icd $env_icd_fn
+        echo "No ICD file for Intel(R) GPU device was found in '${systemwide_vendors}'.\n" >> "${PREFIX}/.messages.txt"
+        if [[ -e "${systemwide_vendors}/intel.icd" ]]
+        then
+            echo "Creating default symbolic link.\n" >> "${PREFIX}/.messages.txt"
+            ln -s "${systemwide_vendors}/intel.icd" "$env_icd_fn" || true
+        fi
     fi
 else
-    echo "Folder '${systemwide_vendors}' does not exist. \n" >> $PREFIX/.messages.txt
-    echo "Creating default symbolic link. \n" >> ${PREFIX}/.messages.txt
-    ln -s ${systemwide_vendors}/intel.icd $env_icd_fn
+    echo "Folder '${systemwide_vendors}' does not exist. \n" >> "${PREFIX}/.messages.txt"
 fi

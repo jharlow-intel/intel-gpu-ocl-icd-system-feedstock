@@ -14,9 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-local_vendors=$PREFIX/etc/OpenCL/vendors
-icd_fn=$local_vendors/intel-ocl-gpu.icd
+icd_fn="${PREFIX}"/etc/OpenCL/vendors/intel-ocl-gpu.icd
 
-if [[ -L $icd_fn ]]; then
-    rm $icd_fn
+if [[ -L "$icd_fn" ]]; then
+	rm "$icd_fn" || true
 fi
