@@ -16,8 +16,8 @@ requirements:
 test:
   commands:
     - export ICD_FN=${CONDA_PREFIX}/etc/OpenCL/vendors/intel-ocl-gpu.icd
-    - test -h ${ICD_FN}
-    - test -e "$(readlink ${ICD_FN})"
+    - if [ -d /etc/OpenCL/vendors ]; then test -h "${ICD_FN}"; fi
+    - if [ -L "${ICD_FN}" ]; then test -e "$(readlink "${ICD_FN}")"; fi
 
 about:
   home: https://github.com/IntelPython/{{ name|lower }}-feedstock
